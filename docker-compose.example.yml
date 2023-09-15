@@ -1,0 +1,58 @@
+version: '3'
+services:
+  nginx:
+    image: nginx
+    container_name: nginx-crawler-api
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx_conf:/etc/nginx/conf.d
+      - ./:/var/www/html
+    depends_on:
+      - php
+    networks:
+      services-crawler-api:
+        ipv4_address: 10.10.0.22
+
+  php:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: php-crawler-api
+    restart: always
+    tty: true
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./:/var/www/html
+      - /usr/bin/ssh:/usr/bin/ssh
+    environment:
+      - XDEBUG_CONFIG=remote_host=172.17.0.1
+      - PHP_IDE_CONFIG=serverName=Local
+      - XDEBUG_MODE=coverage
+    networks:
+      services-crawler-api:
+        ipv4_address: 10.10.0.42
+
+  postgres:
+    image: postgres:11
+    container_name: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=crawler_api_db
+      - POSTGRES_USER=adm
+      - POSTGRES_PASSWORD=123456
+    volumes:
+      - ./data/volumes/postgres:/var/lib/postgresql/data
+      - ./data/dump:/var/lib/postgresql/dump
+    networks:
+      services-crawler-api:
+        ipv4_address: 10.10.0.32
+
+networks:
+  services-crawler-api:
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.0.0/20
