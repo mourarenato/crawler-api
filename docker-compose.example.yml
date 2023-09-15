@@ -18,7 +18,7 @@ services:
   php:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./Dockerfile_php
     container_name: php-crawler-api
     restart: always
     tty: true
@@ -49,6 +49,21 @@ services:
     networks:
       services-crawler-api:
         ipv4_address: 10.10.0.32
+
+  python:
+    build:
+      context: .
+      dockerfile: Dockerfile_python
+    container_name: python-crawler
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./iso-python:/app
+    working_dir: '/app'
+    networks:
+      services-crawler-api:
+        ipv4_address: 10.10.0.92
 
 networks:
   services-crawler-api:
