@@ -47,32 +47,25 @@ Endpoint(POST): http://10.10.0.22/api/signin
 
 #### Examples of valid requests:
 
-- With `code` param:
-
+*With code param:
 
     {  
         "code": "GBP"
     }
 
-
-- With `code_list` param:
-
+*With code_list param:
 
     {  
         "code_list": ["USD", "BRL]
     }
 
-
-- With `number` param:
-
+*With number param:
 
     {  
         "number": 840
     }
 
-
-- With `number_list` param:
-
+*With number_list param:
 
     {  
         "number_list": [840, 404] 
